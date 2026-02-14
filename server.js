@@ -50,13 +50,6 @@ function createApp() {
 }
 
 if (require.main === module) {
-  const server = createApp();
-
-  server.on("error", (err) => {
-    console.error("Server error:", err.message);
-    process.exit(1);
-  });
-
   process.on("uncaughtException", (err) => {
     console.error("Uncaught exception:", err.message);
     process.exit(1);
@@ -64,6 +57,13 @@ if (require.main === module) {
 
   process.on("unhandledRejection", (reason) => {
     console.error("Unhandled rejection:", reason);
+    process.exit(1);
+  });
+
+  const server = createApp();
+
+  server.on("error", (err) => {
+    console.error("Server error:", err.message);
     process.exit(1);
   });
 
