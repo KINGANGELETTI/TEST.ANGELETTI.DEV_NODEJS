@@ -46,4 +46,15 @@ describe("server", () => {
       done();
     });
   });
+
+  it("accepts connections on 0.0.0.0", (_, done) => {
+    const testServer = createApp();
+    testServer.listen(0, "0.0.0.0", () => {
+      const { port } = testServer.address();
+      http.get(`http://0.0.0.0:${port}/`, (res) => {
+        assert.strictEqual(res.statusCode, 200);
+        testServer.close(done);
+      });
+    });
+  });
 });

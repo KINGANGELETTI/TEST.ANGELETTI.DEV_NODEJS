@@ -3,6 +3,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || "0.0.0.0";
 const PUBLIC_DIR = path.join(__dirname, "public");
 
 const MIME_TYPES = {
@@ -50,8 +51,24 @@ function createApp() {
 
 if (require.main === module) {
   const server = createApp();
-  server.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/`);
+
+  server.on("error", (err) => {
+    console.error("Server error:", err.message);
+    process.exit(1);
+  });
+
+  process.on("uncaughtException", (err) => {
+    console.error("Uncaught exception:", err.message);
+    process.exit(1);
+  });
+
+  process.on("unhandledRejection", (reason) => {
+    console.error("Unhandled rejection:", reason);
+    process.exit(1);
+  });
+
+  server.listen(PORT, HOST, () => {
+    console.log(`Server running at http://${HOST}:${PORT}/`);
   });
 }
 
