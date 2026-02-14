@@ -39,4 +39,11 @@ describe("server", () => {
       done();
     });
   });
+
+  it("blocks path traversal attempts", (_, done) => {
+    http.get(baseUrl + "/../package.json", (res) => {
+      assert.notStrictEqual(res.statusCode, 200);
+      done();
+    });
+  });
 });

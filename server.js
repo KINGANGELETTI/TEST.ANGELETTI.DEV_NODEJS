@@ -19,10 +19,10 @@ const MIME_TYPES = {
 function createApp() {
   return http.createServer((req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
-    let filePath = path.join(PUBLIC_DIR, url.pathname);
+    let filePath = path.resolve(PUBLIC_DIR, "." + url.pathname);
 
     // Prevent path traversal
-    if (!filePath.startsWith(PUBLIC_DIR)) {
+    if (!filePath.startsWith(PUBLIC_DIR + path.sep) && filePath !== PUBLIC_DIR) {
       res.writeHead(403, { "Content-Type": "text/plain" });
       res.end("Forbidden");
       return;
